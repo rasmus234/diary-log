@@ -1,4 +1,4 @@
-using DiaryLogApi.Models;
+using DiaryLogDomain;
 
 var builder = WebApplication.CreateBuilder(args);
 
