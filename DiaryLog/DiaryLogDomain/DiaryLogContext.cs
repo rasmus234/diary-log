@@ -7,13 +7,13 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace DiaryLogApi.Models
 {
-    public partial class DiarylogContext : DbContext
+    public partial class DiaryLogContext : DbContext
     {
-        public DiarylogContext()
+        public DiaryLogContext()
         {
         }
 
-        public DiarylogContext(DbContextOptions<DiarylogContext> options)
+        public DiaryLogContext(DbContextOptions<DiaryLogContext> options)
             : base(options)
         {
         }
