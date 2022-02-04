@@ -2,15 +2,17 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
-namespace DiaryLogDomain
+namespace DiaryLogDomain;
+
+public partial class PostCategory
 {
-    public partial class PostCategory
-    {
-        public int CategoryId { get; set; }
-        public int PostId { get; set; }
+    public int CategoryId { get; set; }
+    public int PostId { get; set; }
 
-        public virtual Category Category { get; set; } = null!;
-        public virtual Post Post { get; set; } = null!;
-    }
+    [JsonIgnore]
+    public virtual Category Category { get; set; } = null!;
+    [JsonIgnore]
+    public virtual Post Post { get; set; } = null!;
 }

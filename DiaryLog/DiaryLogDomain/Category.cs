@@ -2,21 +2,23 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
-namespace DiaryLogDomain
+namespace DiaryLogDomain;
+
+public partial class Category
 {
-    public partial class Category
+    public Category()
     {
-        public Category()
-        {
-            PostCategories = new HashSet<PostCategory>();
-        }
-
-        public int Id { get; set; }
-        public int UserId { get; set; }
-        public string CategoryName { get; set; } = null!;
-
-        public virtual User User { get; set; } = null!;
-        public virtual ICollection<PostCategory> PostCategories { get; set; }
+        PostCategories = new HashSet<PostCategory>();
     }
+
+    public int Id { get; set; }
+    public int UserId { get; set; }
+    public string CategoryName { get; set; } = null!;
+
+    [JsonIgnore]
+    public virtual User User { get; set; } = null!;
+    [JsonIgnore]
+    public virtual ICollection<PostCategory> PostCategories { get; set; }
 }

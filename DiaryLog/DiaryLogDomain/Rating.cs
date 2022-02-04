@@ -2,16 +2,18 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
-namespace DiaryLogDomain
+namespace DiaryLogDomain;
+
+public partial class Rating
 {
-    public partial class Rating
-    {
-        public int UserId { get; set; }
-        public int PostId { get; set; }
-        public bool? IsLike { get; set; }
+    public int UserId { get; set; }
+    public int PostId { get; set; }
+    public bool? IsLike { get; set; }
 
-        public virtual Post Post { get; set; } = null!;
-        public virtual User User { get; set; } = null!;
-    }
+    [JsonIgnore]
+    public virtual Post Post { get; set; } = null!;
+    [JsonIgnore]
+    public virtual User User { get; set; } = null!;
 }

@@ -3,26 +3,25 @@
 using System;
 using System.Collections.Generic;
 
-namespace DiaryLogDomain
+namespace DiaryLogDomain;
+
+public partial class Post
 {
-    public partial class Post
+    public Post()
     {
-        public Post()
-        {
-            Comments = new HashSet<Comment>();
-            PostCategories = new HashSet<PostCategory>();
-            Ratings = new HashSet<Rating>();
-        }
-
-        public int Id { get; set; }
-        public int UserId { get; set; }
-        public DateTime Date { get; set; }
-        public string Title { get; set; } = null!;
-        public string Content { get; set; } = null!;
-
-        public virtual User User { get; set; } = null!;
-        public virtual ICollection<Comment> Comments { get; set; }
-        public virtual ICollection<PostCategory> PostCategories { get; set; }
-        public virtual ICollection<Rating> Ratings { get; set; }
+        Comments = new HashSet<Comment>();
+        PostCategories = new HashSet<PostCategory>();
+        Ratings = new HashSet<Rating>();
     }
+
+    public int Id { get; set; }
+    public int UserId { get; set; }
+    public DateTime Date { get; set; }
+    public string Title { get; set; } = null!;
+    public string Content { get; set; } = null!;
+
+    public virtual User User { get; set; } = null!;
+    public virtual ICollection<Comment> Comments { get; set; }
+    public virtual ICollection<PostCategory> PostCategories { get; set; }
+    public virtual ICollection<Rating> Ratings { get; set; }
 }
