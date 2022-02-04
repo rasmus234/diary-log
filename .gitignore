@@ -1,5 +1,6 @@
-/DiaryLogApi/.idea/
-/DiaryLogApi/bin/
-/DiaryLogApi/obj/
-/diary-log-angular/.vscode/
-/diary-log-angular/node_modules/
+.idea/
+.vs/
+.vscode/
+bin/
+obj/
+node_modules/

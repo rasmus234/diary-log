@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiaryLogDomain", "DiaryLogDomain\DiaryLogDomain.csproj", "{8D8F3992-8F77-4843-902F-6EAAF14D6193}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiaryLogApi", "DiaryLogApi\DiaryLogApi.csproj", "{CE9531C2-19D8-44BD-848B-A905CCA95558}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8D8F3992-8F77-4843-902F-6EAAF14D6193}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D8F3992-8F77-4843-902F-6EAAF14D6193}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D8F3992-8F77-4843-902F-6EAAF14D6193}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D8F3992-8F77-4843-902F-6EAAF14D6193}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE9531C2-19D8-44BD-848B-A905CCA95558}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE9531C2-19D8-44BD-848B-A905CCA95558}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE9531C2-19D8-44BD-848B-A905CCA95558}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE9531C2-19D8-44BD-848B-A905CCA95558}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
