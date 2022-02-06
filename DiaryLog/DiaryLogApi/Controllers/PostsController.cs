@@ -28,6 +28,7 @@ public class PostsController : ControllerBase
         return await _context.Posts
             .Include(p => p.User)
             .Include(p => p.PostCategories)
+            .ThenInclude(p => p.Category)
             .Include(p => p.Comments)
             .Include(p => p.Ratings)
             .ToListAsync();

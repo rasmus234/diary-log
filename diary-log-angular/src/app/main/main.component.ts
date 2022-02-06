@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {Post} from "../../models/post";
+import {HttpClient} from "@angular/common/http";
 
 @Component({
   selector: 'app-main',
@@ -7,9 +9,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MainComponent implements OnInit {
 
-  constructor() { }
+  posts?:Post[]
+
+  constructor(private http: HttpClient) {
+
+  }
 
   ngOnInit(): void {
+    this.http.get<Post[]>("https://localhost:7112/api/Posts").subscribe(posts => {
+      this.posts = posts
+    })
   }
 
 }
