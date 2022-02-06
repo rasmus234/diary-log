@@ -16,7 +16,7 @@ export class MainComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.http.get<Post[]>("https://localhost:7112/api/Posts").subscribe(posts => {
+    this.http.get<Post[]>("https://diary-log-easv.herokuapp.com/api/Posts").subscribe(posts => {
       this.posts = posts
     })
   }
