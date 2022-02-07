@@ -14,7 +14,7 @@
         </button>
       </mat-form-field>
 
-      <a mat-raised-button color="primary" routerLink="">Login</a>
+      <button mat-raised-button color="primary" (click)="this.authService.onLogin()">Login</button>
     </mat-card-content>
   </mat-card>
 </div>
