@@ -1,12 +1,11 @@
 #nullable disable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using DiaryLogDomain;
+using DiaryLogDomain.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using DiaryLogDomain;
+using IConfigurationProvider = AutoMapper.IConfigurationProvider;
 
 namespace DiaryLogApi.Controllers;
 
@@ -15,42 +14,37 @@ namespace DiaryLogApi.Controllers;
 public class UsersController : ControllerBase
 {
     private readonly DiaryLogContext _context;
+    private readonly IConfigurationProvider _mapConfig;
+    private readonly IMapper _mapper;
 
-    public UsersController(DiaryLogContext context)
+    public UsersController(DiaryLogContext context, IMapper mapper, IConfigurationProvider mapConfig)
     {
         _context = context;
+        _mapper = mapper;
+        _mapConfig = mapConfig;
     }
 
-    // GET: api/Users
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+    public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
     {
-        return await _context.Users.ToListAsync();
+        return await _context.Users.ProjectTo<UserDto>(_mapConfig).ToListAsync();
     }
 
-    // GET: api/Users/5
-    [HttpGet("{id}")]
-    public async Task<ActionResult<User>> GetUser(int id)
+    [HttpGet("{id:int}")]
+    public async Task<ActionResult<UserDto>> GetUser(int id)
     {
-        var user = await _context.Users.FindAsync(id);
+        var user = await _context.Users.ProjectTo<UserDto>(_mapConfig).FirstOrDefaultAsync(u => u.Id == id);
 
-        if (user == null)
-        {
-            return NotFound();
-        }
+        if (user == null) return NotFound("User not found");
 
         return user;
     }
 
-    // PUT: api/Users/5
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPut("{id}")]
-    public async Task<IActionResult> PutUser(int id, User user)
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> PutUser(int id, UserDto userDto)
     {
-        if (id != user.Id)
-        {
-            return BadRequest();
-        }
+        var user = _mapper.Map<User>(userDto);
+        if (id != user.Id) return BadRequest();
 
         _context.Entry(user).State = EntityState.Modified;
 
@@ -61,38 +55,32 @@ public class UsersController : ControllerBase
         catch (DbUpdateConcurrencyException)
         {
             if (!UserExists(id))
-            {
-                return NotFound();
-            }
-            else
-            {
-                throw;
-            }
+                return NotFound("User not found");
+            throw;
         }
 
         return NoContent();
     }
 
-    // POST: api/Users
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
-    public async Task<ActionResult<User>> PostUser(User user)
+    public async Task<ActionResult<User>> PostUser(UserDto userDto)
     {
+        var user = _mapper.Map<User>(userDto);
+        if (await _context.Users.AnyAsync(userFromDb => user.Username.Equals(userFromDb.Username)))
+            return BadRequest("Username already exists");
+
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
 
-        return CreatedAtAction("GetUser", new { id = user.Id }, user);
+        userDto = _mapper.Map<UserDto>(user);
+        return CreatedAtAction("GetUser", new {id = user.Id}, userDto);
     }
 
-    // DELETE: api/Users/5
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteUser(int id)
     {
         var user = await _context.Users.FindAsync(id);
-        if (user == null)
-        {
-            return NotFound();
-        }
+        if (user == null) return NotFound("User not found");
 
         _context.Users.Remove(user);
         await _context.SaveChangesAsync();

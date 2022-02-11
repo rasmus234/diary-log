@@ -13,8 +13,7 @@ public partial class Comment
     public int UserId { get; set; }
     public string Content { get; set; } = null!;
 
-    [JsonIgnore]
     public virtual Post Post { get; set; } = null!;
-    [JsonIgnore]
+
     public virtual User User { get; set; } = null!;
 }

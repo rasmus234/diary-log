@@ -1,3 +1,4 @@
+using DiaryLogApi;
 using DiaryLogDomain;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,8 @@ builder.Services.AddCors(options =>
         policyBuilder.AllowAnyMethod();
     });
 });
+
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddControllers();
 builder.Services.AddDbContext<DiaryLogContext>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -35,10 +38,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 if (app.Environment.IsDevelopment())
-{
     app.Run("https://localhost:7112");
-}
 else
-{
     app.Run();
-}

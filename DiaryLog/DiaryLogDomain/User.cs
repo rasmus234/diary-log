@@ -21,12 +21,12 @@ public partial class User
     public string Name { get; set; } = null!;
     public string Username { get; set; } = null!;
 
-    [JsonIgnore]
+
     public virtual ICollection<Category> Categories { get; set; }
-    [JsonIgnore]
+ 
     public virtual ICollection<Comment> Comments { get; set; }
-    [JsonIgnore]
+
     public virtual ICollection<Post> Posts { get; set; }
-    [JsonIgnore]
+  
     public virtual ICollection<Rating> Ratings { get; set; }
 }

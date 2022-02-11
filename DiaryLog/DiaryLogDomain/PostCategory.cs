@@ -13,6 +13,5 @@ public partial class PostCategory
 
     
     public virtual Category Category { get; set; } = null!;
-    [JsonIgnore]
     public virtual Post Post { get; set; } = null!;
 }

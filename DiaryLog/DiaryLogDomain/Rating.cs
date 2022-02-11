@@ -12,8 +12,6 @@ public partial class Rating
     public int PostId { get; set; }
     public bool? IsLike { get; set; }
 
-    [JsonIgnore]
     public virtual Post Post { get; set; } = null!;
-    [JsonIgnore]
     public virtual User User { get; set; } = null!;
 }

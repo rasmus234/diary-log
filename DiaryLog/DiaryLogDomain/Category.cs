@@ -17,8 +17,6 @@ public partial class Category
     public int UserId { get; set; }
     public string CategoryName { get; set; } = null!;
 
-    [JsonIgnore]
     public virtual User User { get; set; } = null!;
-    [JsonIgnore]
     public virtual ICollection<PostCategory> PostCategories { get; set; }
 }

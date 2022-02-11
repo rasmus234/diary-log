@@ -1,122 +1,108 @@
 #nullable disable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using DiaryLogDomain;
+using DiaryLogDomain.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using DiaryLogDomain;
+using IConfigurationProvider = AutoMapper.IConfigurationProvider;
 
-namespace DiaryLogApi.Controllers
+namespace DiaryLogApi.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class RatingsController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class RatingsController : ControllerBase
+    private readonly DiaryLogContext _context;
+    private readonly IMapper _mapper;
+    private readonly IConfigurationProvider _mapConfig;
+
+    public RatingsController(DiaryLogContext context, IMapper mapper)
     {
-        private readonly DiaryLogContext _context;
+        _context = context;
+        _mapper = mapper;
+        _mapConfig = mapper.ConfigurationProvider;
+    }
 
-        public RatingsController(DiaryLogContext context)
+    // GET: api/Ratings
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<RatingDto>>> GetRatings()
+    {
+        return await _context.Ratings.ProjectTo<RatingDto>(_mapConfig).ToListAsync();
+    }
+
+    // GET: api/Ratings/5
+    [HttpGet("{userId:int}, {postId:int}")]
+    public async Task<ActionResult<RatingDto>> GetRating(int userId, int postId)
+    {
+        var rating = await _context.Ratings.ProjectTo<RatingDto>(_mapConfig)
+            .FirstOrDefaultAsync(r => r.UserId == userId && r.PostId == postId);
+
+        if (rating == null) return NotFound();
+
+        return rating;
+    }
+
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> PutRating(int id, RatingDto ratingDto)
+    {
+        
+        var rating = _mapper.Map<Rating>(ratingDto);
+        
+        if (id != rating.UserId) return BadRequest();
+
+        _context.Entry(rating).State = EntityState.Modified;
+
+        try
         {
-            _context = context;
-        }
-
-        // GET: api/Ratings
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Rating>>> GetRatings()
-        {
-            return await _context.Ratings.ToListAsync();
-        }
-
-        // GET: api/Ratings/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Rating>> GetRating(int id)
-        {
-            var rating = await _context.Ratings.FindAsync(id);
-
-            if (rating == null)
-            {
-                return NotFound();
-            }
-
-            return rating;
-        }
-
-        // PUT: api/Ratings/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutRating(int id, Rating rating)
-        {
-            if (id != rating.UserId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(rating).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!RatingExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Ratings
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Rating>> PostRating(Rating rating)
-        {
-            _context.Ratings.Add(rating);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (RatingExists(rating.UserId))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return CreatedAtAction("GetRating", new { id = rating.UserId }, rating);
-        }
-
-        // DELETE: api/Ratings/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteRating(int id)
-        {
-            var rating = await _context.Ratings.FindAsync(id);
-            if (rating == null)
-            {
-                return NotFound();
-            }
-
-            _context.Ratings.Remove(rating);
             await _context.SaveChangesAsync();
-
-            return NoContent();
         }
-
-        private bool RatingExists(int id)
+        catch (DbUpdateConcurrencyException)
         {
-            return _context.Ratings.Any(e => e.UserId == id);
+            if (!RatingExists(id))
+                return NotFound();
+            throw;
         }
+
+        return NoContent();
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<Rating>> PostRating(RatingDto ratingDto)
+    {
+        var rating = _mapper.Map<Rating>(ratingDto);
+        
+        _context.Ratings.Add(rating);
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateException)
+        {
+            if (RatingExists(rating.UserId))
+                return Conflict("Rating already exists");
+            throw;
+        }
+        ratingDto = _mapper.Map<RatingDto>(rating);
+
+        return CreatedAtAction("GetRating", new {id = rating.UserId}, ratingDto);
+    }
+
+    // DELETE: api/Ratings/5
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> DeleteRating(int id)
+    {
+        var rating = await _context.Ratings.FindAsync(id);
+        if (rating == null) return NotFound();
+
+        _context.Ratings.Remove(rating);
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
+
+    private bool RatingExists(int id)
+    {
+        return _context.Ratings.Any(e => e.UserId == id);
     }
 }
