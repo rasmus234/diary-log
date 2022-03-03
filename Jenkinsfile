@@ -5,7 +5,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building..'
-                dotnet build ./DiaryLog/DiaryLog.sln
+                sh 'dotnet build DiaryLog/DiaryLog.sln'
             }
         }
         stage('Test') {
