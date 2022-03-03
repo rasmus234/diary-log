@@ -6,7 +6,7 @@ import { Rating } from "./rating";
 export interface Post {
   id: number;
   userId: number;
-  date: string;
+  date: Date;
   title: string;
   content: string;
   user: User;
