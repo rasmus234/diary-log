@@ -3,14 +3,15 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DiaryLogDomain;
 using DiaryLogDomain.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using IConfigurationProvider = AutoMapper.IConfigurationProvider;
 
 namespace DiaryLogApi.Controllers;
 
-[Route("api/[controller]")]
 [ApiController]
+[Route("api/[controller]")]
 public class CategoriesController : ControllerBase
 {
     private readonly DiaryLogContext _context;
@@ -72,7 +73,7 @@ public class CategoriesController : ControllerBase
         var categoryExists = await _context.Categories.AnyAsync(c =>
             c.CategoryName == categoryDto.CategoryName && c.UserId == categoryDto.UserId);
         if (categoryExists) return BadRequest("Category with this name already exists");
-        
+
         var category = _mapper.Map<Category>(categoryDto);
         _context.Categories.Add(category);
         await _context.SaveChangesAsync();
