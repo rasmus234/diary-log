@@ -30,9 +30,18 @@ public class RatingsController : ControllerBase
     {
         return await _context.Ratings.ProjectTo<RatingDto>(_mapConfig).ToListAsync();
     }
+    
+    //get total amount of likes for a specific post
+    [HttpGet("{postId:int}/total")]
+    public async Task<IActionResult> GetLikes(int postId)
+    {
+        var likes = await _context.Ratings.CountAsync(r => r.PostId == postId && r.IsLike == true);
+        var dislikes = await _context.Ratings.CountAsync(r => r.PostId == postId && r.IsLike == false);
+        return Ok(new {likes, dislikes});
+    }
+    
 
-    // GET: api/Ratings/5
-    [HttpGet("{userId:int}, {postId:int}")]
+    [HttpGet("{postId:int}/{userId:int}")]
     public async Task<ActionResult<RatingDto>> GetRating(int userId, int postId)
     {
         var rating = await _context.Ratings.ProjectTo<RatingDto>(_mapConfig)
@@ -43,13 +52,13 @@ public class RatingsController : ControllerBase
         return rating;
     }
 
-    [HttpPut("{id:int}")]
-    public async Task<IActionResult> PutRating(int id, RatingDto ratingDto)
+    [HttpPut("{postId:int}/{userId:int}")]
+    public async Task<IActionResult> PutRating(int userId,int postId, RatingDto ratingDto)
     {
         
         var rating = _mapper.Map<Rating>(ratingDto);
         
-        if (id != rating.UserId) return BadRequest();
+        if (userId != rating.UserId || rating.PostId != postId) return BadRequest();
 
         _context.Entry(rating).State = EntityState.Modified;
 
@@ -59,7 +68,7 @@ public class RatingsController : ControllerBase
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!RatingExists(id))
+            if (!RatingExists(userId))
                 return NotFound();
             throw;
         }
