@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 namespace DiaryLogApi.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class AuthenticationController : ControllerBase
     {
@@ -25,11 +26,13 @@ namespace DiaryLogApi.Controllers
         // POST: api/Authentication
         [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> GenerateToken(LoginDto loginDto)
+        public async Task<IActionResult> PostToken(LoginDto loginDto)
         {
             if (loginDto.Username == null! || loginDto.Password == null!) return BadRequest();
 
-            var user = await _context.Users.Where(user => user.Username.Equals(loginDto.Username) && user.Password.Equals(loginDto.Password)).FirstOrDefaultAsync();
+            var user = await _context.Users
+                .Where(user => user.Username.Equals(loginDto.Username) && user.Password.Equals(loginDto.Password))
+                .FirstOrDefaultAsync();
 
             if (user == null) return Unauthorized();
 
@@ -54,9 +57,8 @@ namespace DiaryLogApi.Controllers
             return Ok(jwt);
         }
 
-        [Authorize]
         [HttpGet]
-        public IActionResult Authenticate()
+        public IActionResult GetLoggedIn()
         {
             return Ok();
         }

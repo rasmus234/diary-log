@@ -3,14 +3,16 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DiaryLogDomain;
 using DiaryLogDomain.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using IConfigurationProvider = AutoMapper.IConfigurationProvider;
 
 namespace DiaryLogApi.Controllers;
 
-[Route("api/[controller]")]
 [ApiController]
+[Authorize]
+[Route("api/[controller]")]
 public class PostsController : ControllerBase
 {
     private readonly DiaryLogContext _context;
