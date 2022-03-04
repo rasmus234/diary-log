@@ -25,7 +25,7 @@ namespace DiaryLogApi.Controllers
         // POST: api/Authentication
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult<string>> GetToken(LoginDto loginDto)
+        public async Task<IActionResult> GenerateToken(LoginDto loginDto)
         {
             if (loginDto.Username == null! || loginDto.Password == null!) return BadRequest();
 
@@ -49,6 +49,12 @@ namespace DiaryLogApi.Controllers
             };
 
             return Ok(jwt);
+        }
+
+        [HttpGet]
+        public IActionResult Authenticate()
+        {
+            return Ok();
         }
     }
 }
