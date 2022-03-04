@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {catchError, map, of, timeout} from "rxjs";
+import {catchError, map, of} from "rxjs";
 import {Router} from "@angular/router";
 
 @Injectable({
