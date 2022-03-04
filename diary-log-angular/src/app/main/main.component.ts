@@ -8,7 +8,6 @@ import {HttpClient} from "@angular/common/http";
   styleUrls: ['./main.component.css']
 })
 export class MainComponent implements OnInit {
-
   posts?:Post[]
 
   constructor(private http: HttpClient) {
@@ -20,5 +19,4 @@ export class MainComponent implements OnInit {
       this.posts = posts
     })
   }
-
 }
