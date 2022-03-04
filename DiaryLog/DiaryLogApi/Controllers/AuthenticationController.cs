@@ -51,6 +51,7 @@ namespace DiaryLogApi.Controllers
             return Ok(jwt);
         }
 
+        [Authorize]
         [HttpGet]
         public IActionResult Authenticate()
         {
