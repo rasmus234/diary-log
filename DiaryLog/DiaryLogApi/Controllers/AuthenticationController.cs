@@ -40,7 +40,10 @@ namespace DiaryLogApi.Controllers
             var securityToken = tokenHandler.CreateJwtSecurityToken(new SecurityTokenDescriptor
             {
                 SigningCredentials = credentials,
-                // Claims = new Dictionary<string, object> { }
+                Claims = new Dictionary<string, object>
+                {
+                    ["id"] = user.Id
+                }
             });
 
             var jwt = new
