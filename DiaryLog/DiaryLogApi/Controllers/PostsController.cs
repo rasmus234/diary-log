@@ -1,11 +1,12 @@
 #nullable disable
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using DiaryLogDomain;
-using DiaryLogDomain.DTOs;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using IConfigurationProvider = AutoMapper.IConfigurationProvider;
 
 namespace DiaryLogApi.Controllers;
 
@@ -14,37 +15,47 @@ namespace DiaryLogApi.Controllers;
 public class PostsController : ControllerBase
 {
     private readonly DiaryLogContext _context;
-    private readonly IConfigurationProvider _mapConfig;
-    private readonly IMapper _mapper;
 
-    public PostsController(DiaryLogContext context, IMapper mapper)
+    public PostsController(DiaryLogContext context)
     {
         _context = context;
-        _mapper = mapper;
-        _mapConfig = mapper.ConfigurationProvider;
     }
 
+    // GET: api/Post
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<PostDto>>> GetPosts()
+    public async Task<ActionResult<IEnumerable<Post>>> GetPosts()
     {
-        return await _context.Posts.ProjectTo<PostDto>(_mapConfig).ToListAsync();
+        return await _context.Posts
+            .Include(p => p.User)
+            .Include(p => p.PostCategories)
+            .Include(p => p.Comments)
+            .Include(p => p.Ratings)
+            .ToListAsync();
     }
 
-    [HttpGet("{id:int}")]
-    public async Task<ActionResult<PostDto>> GetPost(int id)
+    // GET: api/Post/5
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Post>> GetPost(int id)
     {
-        var post = await _context.Posts.ProjectTo<PostDto>(_mapConfig).FirstOrDefaultAsync(p => p.Id == id);
+        var post = await _context.Posts.FindAsync(id);
 
-        if (post == null) return NotFound("Post not found");
+        if (post == null)
+        {
+            return NotFound();
+        }
 
         return post;
     }
 
-    [HttpPut("{id:int}")]
-    public async Task<IActionResult> PutPost(int id, PostDto postDto)
+    // PUT: api/Post/5
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPut("{id}")]
+    public async Task<IActionResult> PutPost(int id, Post post)
     {
-        var post = _mapper.Map<Post>(postDto);
-        if (id != post.Id) return BadRequest();
+        if (id != post.Id)
+        {
+            return BadRequest();
+        }
 
         _context.Entry(post).State = EntityState.Modified;
 
@@ -55,19 +66,23 @@ public class PostsController : ControllerBase
         catch (DbUpdateConcurrencyException)
         {
             if (!PostExists(id))
+            {
                 return NotFound();
-            throw;
+            }
+            else
+            {
+                throw;
+            }
         }
 
         return NoContent();
     }
 
+    // POST: api/Post
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
-    public async Task<ActionResult<PostDto>> PostPost(CreatePostDto createPostDto)
+    public async Task<ActionResult<Post>> PostPost(Post post)
     {
-        var post = _mapper.Map<Post>(createPostDto);
-        post.Date = DateTime.Now;
-
         _context.Posts.Add(post);
         try
         {
@@ -76,20 +91,27 @@ public class PostsController : ControllerBase
         catch (DbUpdateException)
         {
             if (PostExists(post.Id))
+            {
                 return Conflict();
-            throw;
+            }
+            else
+            {
+                throw;
+            }
         }
 
-        var postDto = _mapper.Map<PostDto>(post);
-        return CreatedAtAction("GetPost", new {id = post.Id}, postDto);
+        return CreatedAtAction("GetPost", new { id = post.Id }, post);
     }
 
     // DELETE: api/Post/5
-    [HttpDelete("{id:int}")]
+    [HttpDelete("{id}")]
     public async Task<IActionResult> DeletePost(int id)
     {
         var post = await _context.Posts.FindAsync(id);
-        if (post == null) return NotFound();
+        if (post == null)
+        {
+            return NotFound();
+        }
 
         _context.Posts.Remove(post);
         await _context.SaveChangesAsync();
