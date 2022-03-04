@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {AuthService} from "../auth/auth.service";
+import {HttpClient} from "@angular/common/http";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-login',
@@ -8,10 +9,23 @@ import {AuthService} from "../auth/auth.service";
 })
 export class LoginComponent implements OnInit {
   hide = true;
+  username = '';
+  password = '';
 
-  constructor(public authService:AuthService) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   ngOnInit(): void {
   }
 
+  onLogin() {
+    console.log(this.username)
+
+    this.http.post<any>('https://diary-log-easv.herokuapp.com/api/Authentication', {
+      username: this.username,
+      password: this.password
+    }).subscribe(res => {
+      localStorage.setItem('token', res.token);
+      this.router.navigateByUrl('/');
+    });
+  }
 }
