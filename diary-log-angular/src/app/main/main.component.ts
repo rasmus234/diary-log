@@ -12,6 +12,7 @@ export class MainComponent implements OnInit {
   constructor(private http: HttpClient) { }
 
   posts?: Post[]
+  currentPost: Post = {}
 
   ngOnInit(): void {
     this.http.get<Post[]>('https://diary-log-easv.herokuapp.com/api/Posts').subscribe(posts => {
@@ -19,4 +20,11 @@ export class MainComponent implements OnInit {
     })
   }
 
+  submitPost(){
+    console.log(this.currentPost)
+    this.currentPost.userId = 1
+    this.http.post<Post>('https://diary-log-easv.herokuapp.com/api/Posts', this.currentPost).subscribe(post => {
+      this.posts?.push(post)
+    })
+  }
 }
