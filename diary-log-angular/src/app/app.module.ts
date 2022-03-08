@@ -13,9 +13,6 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {PostComponent} from './post/post.component';
 import {FormsModule} from "@angular/forms";
-import {TokenInterceptor} from "./_auth/token.interceptor";
-import {ErrorInterceptor} from "./_auth/error.interceptor";
-import {HTTP_INTERCEPTORS} from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -36,10 +33,7 @@ import {HTTP_INTERCEPTORS} from "@angular/common/http";
     MatIconModule,
     FormsModule
   ],
-  providers: [
-    {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true},
-    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule {

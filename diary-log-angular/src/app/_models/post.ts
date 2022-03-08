@@ -1,9 +1,8 @@
-import { User } from "./user";
-import { Comment } from "./comment";
-import { PostCategory } from "./postCategory";
-import { Rating } from "./rating";
+import User from "./user";
+import PostCategory from "./postCategory";
+import Rating from "./rating";
 
-export interface Post {
+export default interface Post {
   id?: number;
   userId?: number;
   date?: Date;
