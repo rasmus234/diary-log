@@ -1,6 +1,7 @@
-.idea/
-.vs/
-.vscode/
-bin/
-obj/
-node_modules/
+diary-log-angular/.angular
+**/.idea
+**/.vs
+**/.vscode
+**/node_modules
+**/bin
+**/obj
