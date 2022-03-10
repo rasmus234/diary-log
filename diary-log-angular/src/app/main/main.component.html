@@ -8,16 +8,18 @@
       <mat-form-field>
         <input matInput placeholder="Title" [(ngModel)]="currentPost.title">
       </mat-form-field>
+
       <mat-form-field hintLabel="Max 3600 characters" appearance="outline" style="width: 100%">
         <textarea #input maxlength="3600" matNativeControl [(ngModel)]="currentPost.content"></textarea>
+
         <mat-hint align="end">{{input.value?.length || 0}}/3600</mat-hint>
       </mat-form-field>
     </mat-card-content>
+
     <mat-card-actions>
-      <button mat-raised-button color="primary" style="width: 100%" (click)="submitPost()">Post</button>
+      <button mat-raised-button color="primary" style="width: 100%" (click)="handlePost()">Post</button>
     </mat-card-actions>
   </mat-card>
 
   <app-post *ngFor="let post of posts" [post]="post"></app-post>
-
 </div>
