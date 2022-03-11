@@ -29,7 +29,7 @@ pipeline {
             }
             post {
                 success {
-                    publishCoverage adapters: [coberturaAdapter(path: "DiaryLog/TestResults/*/coverage.cobertura.xml")] 
+                    publishCoverage adapters: [coberturaAdapter(path: "Diary Log/DiaryLog/DiaryLogApiTests/TestResults")] 
                 }
             }
         }
