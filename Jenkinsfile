@@ -8,7 +8,6 @@ pipeline {
                         sh 'dotnet build DiaryLog/DiaryLog.sln'
                     }
                 }
-
                 stage('Build Front End') {
                     steps {
                         dir('diary-log-angular') {
@@ -18,6 +17,8 @@ pipeline {
                     }
                 }
             }
+        }
+    
         stage('Test') {
             steps {
                 echo 'Testing..'
@@ -25,12 +26,11 @@ pipeline {
                     sh "dotnet test"
                 }
             }
-            
         }
         stage('Deploy') {
             steps {
                 echo 'Deploying....'
             }
         }
+       }
     }
-}
