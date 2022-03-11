@@ -11,7 +11,7 @@ using IConfigurationProvider = AutoMapper.IConfigurationProvider;
 namespace DiaryLogApi.Controllers;
 
 [ApiController]
-[Authorize]
+[AllowAnonymous]
 [Route("api/[controller]")]
 public class PostsController : ControllerBase
 {

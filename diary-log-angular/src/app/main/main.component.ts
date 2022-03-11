@@ -1,6 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import Post from "../_models/post";
 import {HttpClient} from "@angular/common/http";
+import {PostsService} from "../posts.service";
+import {apiUrl} from "../app.component";
 
 @Component({
   selector: 'app-main',
@@ -8,23 +10,23 @@ import {HttpClient} from "@angular/common/http";
   styleUrls: ['./main.component.css']
 })
 export class MainComponent implements OnInit {
-  posts?: Post[]
+
+  constructor(private http: HttpClient, public postsService:PostsService) { }
+
+
   currentPost: Post = {}
 
-  constructor(private http: HttpClient) {
-  }
-
   ngOnInit(): void {
-    this.http.get<Post[]>('https://diary-log-easv.herokuapp.com/api/Posts').subscribe(posts => {
-      this.posts = posts;
-    });
+    this.http.get<Post[]>(`${apiUrl}/Posts`).subscribe(posts => {
+      this.postsService.posts = posts
+    })
   }
 
-  handlePost() {
-    this.currentPost.userId = 1;
-
-    this.http.post<Post>('https://diary-log-easv.herokuapp.com/api/Posts', this.currentPost).subscribe(post => {
-      this.posts?.push(post)
-    });
+  handlePost(){
+    console.log(this.currentPost)
+    this.currentPost.userId = 1
+    this.http.post<Post>(`${apiUrl}/Posts`, this.currentPost).subscribe(post => {
+      this.postsService.posts.push(post)
+    })
   }
 }
