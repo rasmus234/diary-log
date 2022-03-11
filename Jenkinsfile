@@ -16,8 +16,8 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing..'
-                dir("DiaryLogApiTests"){
-                    sh "dotnet test --collect:'XPlat Code Coverage'"
+                dir("DiaryLog/DiaryLogApiTests"){
+                    sh "dotnet test"
                 }
             }
             post {
