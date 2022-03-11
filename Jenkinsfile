@@ -23,7 +23,13 @@ pipeline {
             steps {
                 echo 'Testing..'
                 dir("DiaryLog/DiaryLogApiTests"){
-                    sh "dotnet test"
+                    sh "dotnet add package coverlet.collector"
+                    sh "dotnet test --collect:'XPlat Code Coverage'"
+                }
+            }
+            post {
+                success {
+                    publishCoverage adapters: [coberturaAdapter(path: "DiaryLog/TestResults/*/coverage.cobertura.xml")] 
                 }
             }
         }
