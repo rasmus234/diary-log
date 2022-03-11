@@ -1,18 +1,23 @@
 pipeline {
     agent any
     stages {
-        stage('Build') {
-            steps {
-                echo 'Building..'
+       stage('Build') {
+            parallel {
+                stage('Build API') {
+                    steps {
+                        sh 'dotnet build DiaryLog/DiaryLog.sln'
+                    }
+                }
 
-                sh 'dotnet build DiaryLog/DiaryLog.sln'
-
-				dir('diary-log-angular') {
-					sh 'npm install'
-					sh 'npx ng build diary-log-angular'
-				}
+                stage('Build Front End') {
+                    steps {
+                        dir('diary-log-angular') {
+                            sh 'npm install'
+                            sh 'npx ng build diary-log-angular'
+                        }
+                    }
+                }
             }
-        }
         stage('Test') {
             steps {
                 echo 'Testing..'
