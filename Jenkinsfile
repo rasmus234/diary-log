@@ -20,11 +20,6 @@ pipeline {
                     sh "dotnet test"
                 }
             }
-            post {
-                success {
-                    
-                }
-            }
             
         }
         stage('Deploy') {
