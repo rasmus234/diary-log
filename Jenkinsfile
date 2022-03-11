@@ -37,6 +37,11 @@ pipeline {
             steps {
                 echo 'Deploying....'
             }
+            post {
+                success {
+                    discordSend description: 'test', enableArtifactsList: true, footer: '', image: '', link: '', result: '', scmWebUrl: 'https://github.com/rasmus234/diary-log', showChangeset: true, thumbnail: '', title: 'Stigma', webhookURL: 'https://discord.com/api/webhooks/951847255734911016/Vfz5r9qnougI2rLhXfKyleBoToWPTTepmQmB_plN_cf4Fm5VZIYkuoJ4V33haopGg_gb'
+                }
+            }
         }
        }
     }
