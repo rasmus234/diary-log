@@ -36,6 +36,8 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Deploying....'
+                sh "sudo su"
+                sh "sudo docker rm --force diary-log"
                 sh 'sudo docker build ./diary-log-angular -t diary-log'
                 sh 'sudo docker run --name diary-log-nginx -d -p 8070:80 diary-log'
             }
