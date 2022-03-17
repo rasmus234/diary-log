@@ -1,15 +1,13 @@
 pipeline {
     agent any
-    
     stages {
-        stage('Build') {
+       stage('Build') {
             parallel {
                 stage('Build API') {
                     steps {
                         sh 'dotnet build DiaryLog/DiaryLog.sln'
                     }
                 }
-
                 stage('Build Front End') {
                     steps {
                         dir('diary-log-angular') {
@@ -20,16 +18,32 @@ pipeline {
                 }
             }
         }
-        
+    
         stage('Test') {
             steps {
                 echo 'Testing..'
+                dir("DiaryLog/DiaryLogApiTests"){
+                    sh "dotnet add package coverlet.collector"
+                    sh "dotnet test --collect:'XPlat Code Coverage'"
+                }
+            }
+            post {
+                success {
+                    publishCoverage adapters: [coberturaAdapter(path: "Diary Log/DiaryLog/DiaryLogApiTests/TestResults")] 
+                }
             }
         }
         stage('Deploy') {
             steps {
                 echo 'Deploying....'
+                sh 'docker build . -t diary-log'
+                sh 'docker run --name diary-log-nginx -d -p 8070:80 diary-log'
+            }
+            post {
+                success {
+                    discordSend description: 'test', enableArtifactsList: true, footer: '', image: '', link: '', result: '', scmWebUrl: 'https://github.com/rasmus234/diary-log', showChangeset: true, thumbnail: '', title: 'Stigma', webhookURL: 'https://discord.com/api/webhooks/951847255734911016/Vfz5r9qnougI2rLhXfKyleBoToWPTTepmQmB_plN_cf4Fm5VZIYkuoJ4V33haopGg_gb'
+                }
             }
         }
+       }
     }
-}

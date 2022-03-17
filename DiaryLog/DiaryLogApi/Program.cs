@@ -67,5 +67,4 @@ app.UseCors();
 app.UseAuthorization();
 
 app.MapControllers();
-
 app.Run();
