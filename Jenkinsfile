@@ -23,7 +23,6 @@ pipeline {
             steps {
                 echo 'Testing..'
                 dir("DiaryLog/DiaryLogApiTests"){
-                    sh "dotnet add package coverlet.collector"
                     sh "dotnet test --collect:'XPlat Code Coverage'"
                 }
             }
@@ -37,7 +36,7 @@ pipeline {
             steps {
                 echo 'Deploying....'
                 sh "sudo su"
-                sh "sudo docker rm --force diary-log"
+                sh "sudo docker rm --force diary-log-nginx"
                 sh 'sudo docker build ./diary-log-angular -t diary-log'
                 sh 'sudo docker run --name diary-log-nginx -d -p 8070:80 diary-log'
             }
