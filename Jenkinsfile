@@ -22,13 +22,11 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing API'
-
                 dir("DiaryLog/DiaryLogApiTests") {
                     sh "dotnet test --collect:'XPlat Code Coverage'"
                 }
 
                 echo 'Testing front-end'
-
                 dir("diary-log-angular") {
                     sh "npm run test"
                 }
