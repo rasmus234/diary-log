@@ -36,7 +36,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Deploying....'
-                sh 'docker build . -t diary-log'
+                sh 'docker build ./diary-log-angular -t diary-log'
                 sh 'docker run --name diary-log-nginx -d -p 8070:80 diary-log'
             }
             post {
