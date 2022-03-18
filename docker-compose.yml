@@ -1,0 +1,31 @@
+﻿version: "3.9"
+
+services:
+  web:
+    build:
+      context: "Web"
+    container_name: "diary-log-nginx"
+    ports:
+      - "8070:80"
+  api:
+    build:
+      context: "API"
+    container_name: "diary-log-api"
+    ports:
+      - "8060:80"
+      - 
+#    depends_on:
+#      - "db"
+#  db:
+#    image: "mcr.microsoft.com/mssql/server"
+#    container_name: "weather-db-container"
+#    environment:
+#      - ACCEPT_EULA=Y
+#      - SA_PASSWORD=yourStrongP@ssword
+#    ports:
+#      - "8092:1433"
+#    volumes:
+#      - weatherData:/var/opt/mssql:rw
+#
+#volumes:
+#  weatherData:
