@@ -20,7 +20,7 @@ services:
     container_name: "diary-log-db-container"
     environment:
       - ACCEPT_EULA=Y
-      - SA_PASSWORD=stigma
+      - SA_PASSWORD=stigmastigma
     ports:
       - "8092:1433"
     volumes:
