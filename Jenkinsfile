@@ -10,7 +10,7 @@ pipeline{
             steps{
                 dir("DiaryLog") {
                     sh "dotnet build --configuration Release"
-                    sh "docker-compose build api"
+                    sh "sudo docker-compose build api"
                 }
             }
         }
@@ -20,7 +20,7 @@ pipeline{
             }
             steps {
                 dir("diary-log-angular") {
-                    sh "docker-compose build web"
+                    sh "sudo docker-compose build web"
                 }
             }
         }
@@ -33,7 +33,7 @@ pipeline{
             steps {
                 script {
                     try {
-                        sh "docker-compose down"
+                        sh "sudo docker-compose down"
                     }
                     finally { }
                 }
@@ -41,7 +41,7 @@ pipeline{
         }
         stage("Deploy") {
             steps {
-                sh "docker-compose up -d"
+                sh "sudo docker-compose up -d"
             }
         }
     }
