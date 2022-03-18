@@ -13,18 +13,18 @@ services:
     container_name: "diary-log-api"
     ports:
       - "8060:80"
-#    depends_on:
-#      - "db"
-#  db:
-#    image: "mcr.microsoft.com/mssql/server"
-#    container_name: "weather-db-container"
-#    environment:
-#      - ACCEPT_EULA=Y
-#      - SA_PASSWORD=yourStrongP@ssword
-#    ports:
-#      - "8092:1433"
-#    volumes:
-#      - weatherData:/var/opt/mssql:rw
-#
-#volumes:
-#  weatherData:
+    depends_on:
+      - "db"
+  db:
+    image: "mcr.microsoft.com/mssql/server"
+    container_name: "diary-log-db-container"
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=stigma
+    ports:
+      - "8092:1433"
+    volumes:
+      - diary-log-data:/var/opt/mssql:rw
+
+volumes:
+  diary-log-data:
