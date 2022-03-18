@@ -26,7 +26,10 @@ pipeline{
         }
         stage("Unit Tests") {
             steps {
-                echo "Here we'll run unit tests later"
+                echo "Running tests"
+                dir("DiaryLog") {
+                    sh "dotnet test"
+                }
             }
         }
         stage("Clean containers") {
