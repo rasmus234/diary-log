@@ -3,13 +3,13 @@
 services:
   web:
     build:
-      context: "Web"
+      context: "diary-log-angular"
     container_name: "diary-log-nginx"
     ports:
       - "8070:80"
   api:
     build:
-      context: "API"
+      context: "DiaryLog"
     container_name: "diary-log-api"
     ports:
       - "8060:80"
