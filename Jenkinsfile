@@ -1,61 +1,56 @@
-pipeline {
+pipeline{
     agent any
-    stages {
-       stage('Build') {
-            parallel {
-                stage('Build API') {
-                    steps {
-                        sh 'dotnet build DiaryLog/DiaryLog.sln'
-                    }
+    stages{
+        stage("Build API") {
+            when {
+                anyOf {
+                    changeset "DiaryLog/**"
                 }
-                stage('Build Front End') {
-                    steps {
-                        dir('diary-log-angular') {
-                            sh 'npm install'
-                            sh 'npx ng build diary-log-angular'
-                        }
-                    }
+            }
+            steps{
+                dir("DiaryLog") {
+                    sh "dotnet build --configuration Release"
+                    sh "sudo docker-compose build api"
                 }
             }
         }
-    
-        stage('Test') {
+        stage("Build frontend") {
+            when {
+                changeset "diary-log-angular/**"
+            }
             steps {
-                echo 'Testing API'
-                dir("DiaryLog/DiaryLogApiTests") {
-                    sh "dotnet test --collect:'XPlat Code Coverage'"
-                }
-
-                echo 'Testing front-end'
                 dir("diary-log-angular") {
-                    sh "npm run test"
-                }
-            }
-            post {
-                success {
-                    publishCoverage adapters: [coberturaAdapter(path: "Diary Log/DiaryLog/DiaryLogApiTests/TestResults")] 
+                    sh "sudo docker-compose build web"
                 }
             }
         }
-        stage('Deploy') {
+        stage("Unit Tests") {
             steps {
-                echo 'Deploying API'
-                sh "sudo su"
-
-                sh "sudo docker rm --force diary-log-api"
-                sh 'sudo docker build ./DiaryLog -t diary-log-api'
-                sh 'sudo docker run --name diary-log-api -d -p 8060:80 diary-log-api'
-
-                echo 'Deploying front-end'
-                sh "sudo docker rm --force diary-log-nginx"
-                sh 'sudo docker build ./diary-log-angular -t diary-log'
-                sh 'sudo docker run --name diary-log-nginx -d -p 8070:80 diary-log'
-            }
-            post {
-                success {
-                    discordSend description: 'test', enableArtifactsList: true, footer: '', image: '', link: '', result: '', scmWebUrl: 'https://github.com/rasmus234/diary-log', showChangeset: true, thumbnail: '', title: 'Stigma', webhookURL: 'https://discord.com/api/webhooks/951847255734911016/Vfz5r9qnougI2rLhXfKyleBoToWPTTepmQmB_plN_cf4Fm5VZIYkuoJ4V33haopGg_gb'
+                echo "Running tests"
+                dir("DiaryLog") {
+                    sh "dotnet test"
                 }
             }
         }
-       }
+        stage("Clean containers") {
+            steps {
+                script {
+                    try {
+                        sh "sudo docker-compose down"
+                    }
+                    finally { }
+                }
+            }
+        }
+        stage("Deploy") {
+            steps {
+                sh "sudo docker-compose up -d"
+            }
+        }
+        stage("Discord Notification") {
+            steps {
+                discordSend description: 'Build completed', enableArtifactsList: true, footer: '', image: '', link: '', result: 'SUCCESS', scmWebUrl: 'https://github.com/rasmus234/diary-log', showChangeset: true, thumbnail: '', title: 'Diary Log', webhookURL: 'https://discord.com/api/webhooks/951847255734911016/Vfz5r9qnougI2rLhXfKyleBoToWPTTepmQmB_plN_cf4Fm5VZIYkuoJ4V33haopGg_gb'
+            }
+        }
     }
+}

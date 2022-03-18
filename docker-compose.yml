@@ -1,0 +1,30 @@
+﻿version: "3.9"
+
+services:
+  web:
+    build:
+      context: "diary-log-angular"
+    container_name: "diary-log-nginx"
+    ports:
+      - "8070:80"
+  api:
+    build:
+      context: "DiaryLog"
+    container_name: "diary-log-api"
+    ports:
+      - "8060:80"
+    depends_on:
+      - "db"
+  db:
+    image: "mcr.microsoft.com/mssql/server"
+    container_name: "diary-log-db-container"
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=stigma
+    ports:
+      - "8092:1433"
+    volumes:
+      - diary-log-data:/var/opt/mssql:rw
+
+volumes:
+  diary-log-data:
