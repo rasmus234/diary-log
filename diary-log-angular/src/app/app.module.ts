@@ -14,6 +14,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {PostComponent} from './post/post.component';
 import {FormsModule} from "@angular/forms";
 import {CookieService} from "ngx-cookie-service";
+import {LocationStrategy, PathLocationStrategy} from "@angular/common";
 
 @NgModule({
   declarations: [
@@ -34,7 +35,7 @@ import {CookieService} from "ngx-cookie-service";
     MatIconModule,
     FormsModule
   ],
-  providers: [CookieService],
+  providers: [CookieService, {provide: LocationStrategy, useClass: PathLocationStrategy}],
   bootstrap: [AppComponent]
 })
 export class AppModule {
