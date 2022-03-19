@@ -10,23 +10,21 @@ import {apiUrl} from "../app.component";
   styleUrls: ['./main.component.css']
 })
 export class MainComponent implements OnInit {
-
-  constructor(private http: HttpClient, public postsService:PostsService) { }
-
+  constructor(private readonly _http: HttpClient, public readonly _postsService:PostsService) { }
 
   currentPost: Post = {}
 
   ngOnInit(): void {
-    this.http.get<Post[]>(`${apiUrl}/Posts`).subscribe(posts => {
-      this.postsService.posts = posts
+    this._http.get<Post[]>(`${apiUrl}/posts`).subscribe(posts => {
+      this._postsService.posts = posts
     })
   }
 
   handlePost(){
     console.log(this.currentPost)
     this.currentPost.userId = 1
-    this.http.post<Post>(`${apiUrl}/Posts`, this.currentPost).subscribe(post => {
-      this.postsService.posts.push(post)
+    this._http.post<Post>(`${apiUrl}/posts`, this.currentPost).subscribe(post => {
+      this._postsService.posts.push(post)
     })
   }
 }
