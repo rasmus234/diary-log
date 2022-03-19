@@ -3,7 +3,6 @@ import Post from "../_models/post";
 import {HttpClient} from "@angular/common/http";
 import {apiUrl} from "../app.component";
 import {PostsService} from "../posts.service";
-import {error} from "@angular/compiler/src/util";
 
 @Component({
   selector: 'app-post',

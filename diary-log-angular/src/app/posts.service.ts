@@ -5,7 +5,6 @@ import Post from "./_models/post";
   providedIn: 'root'
 })
 export class PostsService {
-
   posts: Post[] = []
   constructor() { }
 }
