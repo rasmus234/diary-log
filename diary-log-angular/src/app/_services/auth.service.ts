@@ -12,8 +12,9 @@ export class AuthService {
   }
 
   async login(username: string, password: string): Promise<void> {
-    await firstValueFrom(this._http.post(`${apiUrl}/authentication`, {username: username, password: password}));
-    console.log(this._cookieService.get("diary-log-jwt"));
+    const token: any = await firstValueFrom(this._http.post(`${apiUrl}/authentication`, {username: username, password: password}));
+
+    this._cookieService.set("diary-log-jwt", token.token)
   }
 
   logout(): void {

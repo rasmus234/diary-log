@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using NuGet.Protocol;
 
 namespace DiaryLogApi.Controllers
 {
@@ -53,11 +54,6 @@ namespace DiaryLogApi.Controllers
             {
                 token = tokenHandler.WriteToken(securityToken)
             };
-
-            Response.Cookies.Append("diary-log-jwt", jwt.token, new CookieOptions
-            {
-                IsEssential = true
-            });
 
             return Ok(jwt);
         }
