@@ -8,9 +8,6 @@ import {firstValueFrom} from "rxjs";
   providedIn: 'root'
 })
 export class AuthService {
-  // Todo: Remove follow variable:
-  placeholder: undefined;
-
   constructor(private readonly _cookieService: CookieService, private readonly _http: HttpClient) {
   }
 
