@@ -20,7 +20,7 @@ pipeline{
             }
             steps {
                 dir("diary-log-angular") {
-					sh "sudo rmdir dist -f"
+					sh "sudo rmdir dist -rf"
 					sh "sudo ng build"
                     sh "sudo docker-compose build web"
                 }
