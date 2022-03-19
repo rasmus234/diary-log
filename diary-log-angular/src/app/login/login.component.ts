@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
+import {AuthService} from "../_services/auth.service";
 
 @Component({
   selector: 'app-login',
@@ -10,7 +11,7 @@ export class LoginComponent implements OnInit {
   user: { username: string, password: string };
   hide: boolean;
 
-  constructor(private router: Router) {
+  constructor(private readonly _authService: AuthService, private readonly _router: Router) {
     this.user = {
       username: '',
       password: ''
@@ -23,6 +24,8 @@ export class LoginComponent implements OnInit {
   }
 
   async handleLogin() {
-    await this.router.navigateByUrl('/');
+    this._authService.login(this.user.username, this.user.password).then(async () => {
+      await this._router.navigateByUrl('/');
+    });
   }
 }
