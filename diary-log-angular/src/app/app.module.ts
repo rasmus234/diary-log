@@ -13,6 +13,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {PostComponent} from './post/post.component';
 import {FormsModule} from "@angular/forms";
+import {CookieService} from "ngx-cookie-service";
 
 @NgModule({
   declarations: [
@@ -33,7 +34,7 @@ import {FormsModule} from "@angular/forms";
     MatIconModule,
     FormsModule
   ],
-  providers: [],
+  providers: [CookieService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

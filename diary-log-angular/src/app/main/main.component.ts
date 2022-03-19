@@ -1,8 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import Post from "../_models/post";
-import {HttpClient} from "@angular/common/http";
 import {PostsService} from "../posts.service";
-import {apiUrl} from "../app.component";
 
 @Component({
   selector: 'app-main',
@@ -10,21 +8,16 @@ import {apiUrl} from "../app.component";
   styleUrls: ['./main.component.css']
 })
 export class MainComponent implements OnInit {
-  constructor(private readonly _http: HttpClient, public readonly _postsService:PostsService) { }
-
   currentPost: Post = {}
 
-  ngOnInit(): void {
-    this._http.get<Post[]>(`${apiUrl}/posts`).subscribe(posts => {
-      this._postsService.posts = posts
-    })
+  constructor(public readonly _postsService: PostsService) {
   }
 
-  handlePost(){
-    console.log(this.currentPost)
-    this.currentPost.userId = 1
-    this._http.post<Post>(`${apiUrl}/posts`, this.currentPost).subscribe(post => {
-      this._postsService.posts.push(post)
-    })
+  ngOnInit(): void {
+    this._postsService.refresh();
+  }
+
+  handlePost(): void {
+    this._postsService.post(this.currentPost);
   }
 }

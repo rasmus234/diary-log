@@ -54,6 +54,8 @@ namespace DiaryLogApi.Controllers
                 token = tokenHandler.WriteToken(securityToken)
             };
 
+            Response.Cookies.Append("diary-log-jwt", jwt.token);
+
             return Ok(jwt);
         }
 
