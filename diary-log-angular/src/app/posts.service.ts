@@ -2,6 +2,7 @@
 import Post from "./_models/post";
 import {apiUrl} from "./app.component";
 import {HttpClient} from "@angular/common/http";
+import {AuthService} from "./_services/auth.service";
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ import {HttpClient} from "@angular/common/http";
 export class PostsService {
   posts: Post[] = []
 
-  constructor(private readonly _http: HttpClient) {
+  constructor(private readonly _http: HttpClient, private readonly _authService: AuthService) {
   }
 
   refresh(): void {
@@ -19,7 +20,7 @@ export class PostsService {
   }
 
   post(post: Post): void {
-    post.userId = 1;
+    post.userId = this._authService.userId();
 
     this._http.post<Post>(`${apiUrl}/posts`, post).subscribe(post => {
       this.posts.push(post)

@@ -9,7 +9,7 @@ export class AppComponent {
   title = 'diary-log-angular';
 }
 
-// const localUrl = 'https://localhost:7112/api';
+const localUrl = 'https://localhost:7112/api';
 const prodUrl = 'http://20.123.8.20:8060/api';
 
 export const apiUrl = prodUrl;

@@ -24,8 +24,6 @@ export class LoginComponent implements OnInit {
   }
 
   async handleLogin() {
-    this._authService.login(this.user.username, this.user.password).then(async () => {
-      await this._router.navigate(['/']);
-    });
+    await this._authService.login(this.user.username, this.user.password);
   }
 }

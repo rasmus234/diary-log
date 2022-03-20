@@ -1,4 +1,5 @@
 #nullable disable
+using System.IdentityModel.Tokens.Jwt;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DiaryLogDomain;
@@ -29,7 +30,23 @@ public class PostsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<PostDto>>> GetPosts()
     {
-        return await _context.Posts.ProjectTo<PostDto>(_mapConfig).ToListAsync();
+        Request.Cookies.TryGetValue("diary-log-jwt", out var token);
+
+        if (!string.IsNullOrEmpty(token))
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jwt = handler.ReadJwtToken(token);
+            var id = jwt.Claims.First(claim => claim.Type == "id").Value;
+
+            var user = await _context.Users.Where(u => u.Id.Equals(id)).Include(u => u.Posts).FirstOrDefaultAsync();
+
+            if (user != null)
+            {
+                return _mapper.Map<PostDto[]>(user.Posts);
+            }
+        }
+
+        return BadRequest();
     }
 
     [HttpGet("{id:int}")]

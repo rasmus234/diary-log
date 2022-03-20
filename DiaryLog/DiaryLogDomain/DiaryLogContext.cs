@@ -165,6 +165,9 @@ public partial class DiaryLogContext : DbContext
             entity.Property(e => e.Username)
                 .HasMaxLength(30)
                 .HasColumnName("username");
+
+            entity.HasIndex(e => e.Username)
+                .IsUnique();
         });
 
         OnModelCreatingPartial(modelBuilder);

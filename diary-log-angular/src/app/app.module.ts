@@ -15,6 +15,7 @@ import {PostComponent} from './post/post.component';
 import {FormsModule} from "@angular/forms";
 import {CookieService} from "ngx-cookie-service";
 import {LocationStrategy, PathLocationStrategy} from "@angular/common";
+import {MatToolbarModule} from "@angular/material/toolbar";
 
 @NgModule({
   declarations: [
@@ -33,9 +34,13 @@ import {LocationStrategy, PathLocationStrategy} from "@angular/common";
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    FormsModule
+    FormsModule,
+    MatToolbarModule
   ],
-  providers: [CookieService, {provide: LocationStrategy, useClass: PathLocationStrategy}],
+  providers: [
+    CookieService,
+    {provide: LocationStrategy, useClass: PathLocationStrategy}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
