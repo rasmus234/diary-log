@@ -1,5 +1,33 @@
 version: '3.9'
+
 services:
+  db:
+    image: "mcr.microsoft.com/mssql/server"
+    container_name: "diary-log-db-container"
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Stigmastigma1
+    ports:
+      - "8092:1433"
+    volumes:
+      - diary-log-data:/var/opt/mssql:rw
+
+  web:
+    build:
+      context: "diary-log-angular"
+    container_name: "diary-log-nginx"
+    ports:
+      - "8070:80"
+
+  api:
+    build:
+      context: "DiaryLog"
+    container_name: "diary-log-api"
+    ports:
+      - "8060:80"
+    depends_on:
+      - "db"
+
   portainer:
     image: portainer/portainer-ce
     container_name: "portainer"
@@ -8,12 +36,14 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "portainer_data:/data"
+
   docker-registry:
     image: "registry"
     volumes:
       - "registry_data:/var/lib/registry"
     ports:
       - "7002:5000"
+
   docker-registry-ui:
     image: "parabuzzle/craneoperator"
     ports:
@@ -29,5 +59,6 @@ services:
       - docker-registry
 
 volumes:
+  diary-log-data:
   portainer_data:
   registry_data:
