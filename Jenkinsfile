@@ -38,7 +38,7 @@ pipeline{
             steps {
                 script {
                     try {
-                        sh "sudo docker-compose down"
+                        sh "sudo docker-compose down --remove-orphans"
                     }
                     finally { }
                 }
