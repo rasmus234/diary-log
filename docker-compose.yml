@@ -24,7 +24,7 @@ services:
       - REGISTRY_PROTOCOL=http
       - SSL_VERIFY=false
       - USERNAME=admin
-      - PASSWORD=mypassword
+      - PASSWORD=password
     depends_on:
       - docker-registry
 
