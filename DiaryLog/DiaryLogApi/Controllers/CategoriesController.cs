@@ -17,6 +17,7 @@ public class CategoriesController : ControllerBase
     private readonly DiaryLogContext _context;
     private readonly IConfigurationProvider _mapConfig;
     private readonly IMapper _mapper;
+    private readonly string _test;
 
     public CategoriesController(DiaryLogContext context, IMapper mapper)
     {
