@@ -30,7 +30,14 @@ pipeline{
             steps {
                 echo "Running tests"
                 dir("DiaryLog") {
-                    sh "dotnet test"
+                    sh "dotnet add package coverlet.collector"
+                    sh "dotnet test --collect:'XPlat Code Coverage'"
+                }
+            }
+            post {
+                success {
+                    archiveArtifacts "DiaryLog/TestResults/*/coverage.cobertura.xml"
+                    publishCoverage adapters: [coberturaAdapter(path: 'DiaryLog/TestResults/*/coverage.cobertura.xml', thresholds: [[failUnhealthy: true, thresholdTarget: 'Conditional', unhealthyThreshold: 80.0, unstableThreshold: 50.0]])], sourceFileResolver: sourceFiles('NEVER_STORE')
                 }
             }
         }
