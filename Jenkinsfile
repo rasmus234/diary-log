@@ -30,6 +30,7 @@ pipeline{
             steps {
                 echo "Running tests"
                 dir("DiaryLog/DiaryLogApiTests") {
+                    sh "rm -rf TestResults"
                     sh "dotnet add package coverlet.collector"
                     sh "dotnet test --collect:'XPlat Code Coverage'"
                 }
