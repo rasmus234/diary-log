@@ -46,6 +46,7 @@ pipeline{
         }
         stage("Registry") {
             steps {
+                sh "docker-compose up -d docker-registry"
                 sh "docker-compose push"
             }
         }
