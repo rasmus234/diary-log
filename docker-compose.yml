@@ -8,7 +8,7 @@ services:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=Stigmastigma1
     ports:
-      - "8092:1433"
+      - "${DB_PORT}:1433"
     volumes:
       - diary-log-data:/var/opt/mssql:rw
 
@@ -29,6 +29,8 @@ services:
       - "8060:80"
     depends_on:
       - "db"
+    environment:
+      - "DiaryLogConnectionString=Server=20.123.8.20,${DB_PORT};Database=DiaryLog;User Id=sa;Password=Stigmastigma1;"
 
   portainer:
     image: portainer/portainer-ce

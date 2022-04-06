@@ -10,7 +10,7 @@ pipeline{
             steps{
                 dir("DiaryLog") {
                     sh "dotnet build --configuration Release"
-                    sh "sudo docker-compose build api"
+                    sh "sudo docker-compose build api --env-file ../config/test.env"
                 }
             }
         }

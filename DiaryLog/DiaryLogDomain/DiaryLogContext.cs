@@ -25,7 +25,7 @@ public partial class DiaryLogContext : DbContext
     {
         if (!optionsBuilder.IsConfigured)
         {
-            optionsBuilder.UseSqlServer("Server=20.123.8.20,8092;Database=DiaryLog;User Id=sa;Password=Stigmastigma1;");
+            optionsBuilder.UseSqlServer(Environment.GetEnvironmentVariable("DiaryLogConnectionString"));
         }
     }
 
