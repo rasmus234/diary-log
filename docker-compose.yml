@@ -15,7 +15,7 @@ services:
   api:
     build:
       context: "DiaryLog"
-    image: "localhost:7002/diary-log-api:${IMAGE_TAG}"
+    image: "localhost:7002/diary-log-api"
     container_name: "${API_CONT_NAME}"
     ports:
       - "${API_PORT}:80"
@@ -27,7 +27,7 @@ services:
   web:
     build:
       context: "diary-log-angular"
-    image: "localhost:7002/diary-log-angular:${IMAGE_TAG}"
+    image: "localhost:7002/diary-log-angular"
     container_name: "${WEB_CONT_NAME}"
     ports:
       - "${WEB_PORT}:80"
