@@ -74,7 +74,6 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                echo "${IMAGE_TAG}"
                 sh 'sudo docker-compose -p diary-log --env-file ./config/test.env up -d'
             }
         }
