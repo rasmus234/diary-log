@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        WEBHOOK_URL = credentials('WEBHOOK_URL')
-    }
-
     stages {
         stage('Build API') {
             when {
