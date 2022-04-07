@@ -10,8 +10,9 @@ pipeline{
             steps{
                 dir("DiaryLog") {
                     sh "dotnet build --configuration Release"
-                    sh "sudo docker-compose build api --env-file ../config/test.env"
                 }
+
+                sh "sudo docker-compose build api --env-file ./config/test.env"
             }
         }
         stage("Build frontend") {
@@ -46,7 +47,7 @@ pipeline{
             steps {
                 script {
                     try {
-                        sh "sudo docker-compose down"
+                        sh "sudo docker-compose down --env-file ./config/test.env"
                     }
                     finally { }
                 }
@@ -54,7 +55,7 @@ pipeline{
         }
         stage("Registry") {
             steps {
-                sh "docker-compose up -d docker-registry"
+                sh "docker-compose up -d docker-registry --env-file ./config/test.env"
                 sh "docker-compose push"
             }
         }
