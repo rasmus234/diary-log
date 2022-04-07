@@ -1,50 +1,54 @@
 pipeline {
   agent any
 
+  environment {
+    WEBHOOK_URL = credentials('WEBHOOK_URL')
+  }
+
   stages {
-    stage("Build API") {
+    stage('Build API') {
       when {
         anyOf {
-          changeset "DiaryLog/**"
+          changeset 'DiaryLog/**'
         }
       }
 
       steps {
-        dir("DiaryLog") {
-          sh "sudo rm -rf ./dist"
-          sh "dotnet build --configuration Release"
-          sh "sudo docker-compose --env-file ../config/test.env build api "
+        dir('DiaryLog') {
+          sh 'sudo rm -rf ./dist'
+          sh 'dotnet build --configuration Release'
+          sh 'sudo docker-compose --env-file ../config/test.env build api'
         }
       }
     }
 
-    stage("Build frontend") {
+    stage('Build frontend') {
       when {
-        changeset "diary-log-angular/**"
+        changeset 'diary-log-angular/**'
       }
 
       steps {
-        dir("diary-log-angular") {
-          sh "sudo rm -rf ./bin"
-          sh "sudo rm -rf ./obj"
-          sh "sudo ng build"
-          sh "sudo docker-compose --env-file ./config/test.env  build web"
+        dir('diary-log-angular') {
+          sh 'sudo rm -rf ./bin'
+          sh 'sudo rm -rf ./obj'
+          sh 'sudo ng build'
+          sh 'sudo docker-compose --env-file ./config/test.env  build web'
         }
       }
     }
 
-    stage("Unit Tests") {
+    stage('Unit Tests') {
       steps {
-        dir("DiaryLog/DiaryLogApiTests") {
-          sh "sudo rm -rf ./TestResults"
-          sh "dotnet add package coverlet.collector"
-          sh "dotnet test --collect:'XPlat Code Coverage'"
+        dir('DiaryLog/DiaryLogApiTests') {
+          sh 'sudo rm -rf ./TestResults'
+          sh 'dotnet add package coverlet.collector'
+          sh 'dotnet test --collect:\'XPlat Code Coverage\''
         }
       }
 
       post {
         success {
-          archiveArtifacts "DiaryLog/DiaryLogApiTests/TestResults/*/coverage.cobertura.xml"
+          archiveArtifacts 'DiaryLog/DiaryLogApiTests/TestResults/*/coverage.cobertura.xml'
           publishCoverage adapters: [coberturaAdapter(path: 'DiaryLog/DiaryLogApiTests/TestResults/*/coverage.cobertura.xml', thresholds: [
             [failUnhealthy: true, thresholdTarget: 'Conditional', unhealthyThreshold: 80.0, unstableThreshold: 50.0]
           ])], sourceFileResolver: sourceFiles('NEVER_STORE')
@@ -52,33 +56,31 @@ pipeline {
       }
     }
 
-    stage("Clean containers") {
+    stage('Clean containers') {
       steps {
         script {
           try {
-            sh "sudo docker-compose --env-file ./config/test.env down"
+            sh 'sudo docker-compose --env-file ./config/test.env down'
           } finally {}
         }
       }
     }
 
-    stage("Deploy") {
+    stage('Deploy') {
       steps {
-        sh "sudo docker-compose --env-file ./config/test.env up -d"
+        sh 'sudo docker-compose -p diary-log --env-file ./config/test.env up -d'
       }
     }
 
-    stage("Registry") {
+    stage('Registry') {
       steps {
-        sh "docker-compose --env-file ./config/test.env push"
+        sh 'docker-compose --env-file ./config/test.env push'
       }
     }
 
-    stage("Discord Notification") {
+    stage('Discord Notification') {
       steps {
-        withCredentials([string(credentialsId: 'DiscordWebhookURL', variable: 'WEBHOOK_URL')]) {
-          discordSend description: 'Build completed', enableArtifactsList: true, footer: '', image: '', link: '', result: 'SUCCESS', scmWebUrl: 'https://github.com/rasmus234/diary-log', showChangeset: true, thumbnail: '', title: 'Diary Log', webhookURL: "${WEBHOOK_URL}"
-        }
+        discordSend description: 'Build completed', enableArtifactsList: true, footer: '', image: '', link: '', result: 'SUCCESS', scmWebUrl: 'https://github.com/rasmus234/diary-log', showChangeset: true, thumbnail: '', title: 'Diary Log', webhookURL: WEBHOOK_URL
       }
     }
   }
