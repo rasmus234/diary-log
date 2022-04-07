@@ -12,14 +12,6 @@ services:
     volumes:
       - diary-log-data:/var/opt/mssql:rw
 
-  web:
-    build:
-      context: "diary-log-angular"
-    image: "localhost:7002/diary-log-angular"
-    container_name: "${WEB_CONT_NAME}"
-    ports:
-      - "${WEB_PORT}:80"
-
   api:
     build:
       context: "DiaryLog"
@@ -31,6 +23,16 @@ services:
       - "db"
     environment:
       - "DiaryLogConnectionString=Server=20.123.8.20,${DB_PORT};Database=DiaryLog;User Id=sa;Password=Stigmastigma1;"
+
+  web:
+    build:
+      context: "diary-log-angular"
+    image: "localhost:7002/diary-log-angular"
+    container_name: "${WEB_CONT_NAME}"
+    ports:
+      - "${WEB_PORT}:80"
+    depends_on:
+      - "api"
 
 volumes:
   diary-log-data:

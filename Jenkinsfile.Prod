@@ -4,20 +4,10 @@ pipeline {
         run filter: 'SUCCESSFUL', name: 'PROMOTED_BUILD', projectName: 'Diary Log'
     }
     stages {
-        stage("Clean containers") {
-            steps {
-                script {
-                    try {
-                        sh "sudo docker-compose down --env-file ./config/Prod.env"
-                    }
-                    finally { }
-                }
-            }
-        }
         stage("Deploy to production") {
             steps {
-                sh "docker-compose --env-file config/Prod.env pull"
-                sh "docker-compose --env-file config/Prod.env up -d"
+                sh "docker-compose --env-file config/prod.env pull"
+                sh "docker-compose --env-file config/prod.env up -d"
             }
         }
     }
