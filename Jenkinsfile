@@ -39,8 +39,9 @@ pipeline {
                     sh 'sudo rm -rf ./bin'
                     sh 'sudo rm -rf ./obj'
                     sh 'dotnet build --configuration Release'
-                    sh 'sudo docker-compose --env-file ../config/test.env build api'
                 }
+
+                sh 'sudo docker-compose --env-file ./config/test.env build api'
             }
         }
 
