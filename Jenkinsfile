@@ -47,7 +47,7 @@ pipeline{
             steps {
                 script {
                     try {
-                        sh "sudo docker-compose down --env-file ./config/test.env"
+                        sh "sudo docker-compose down --env-file config/test.env"
                     }
                     finally { }
                 }
@@ -55,7 +55,7 @@ pipeline{
         }
         stage("Registry") {
             steps {
-                sh "docker-compose up -d docker-registry --env-file ./config/test.env"
+                sh "docker-compose up -d docker-registry --env-file config/test.env"
                 sh "docker-compose push"
             }
         }
