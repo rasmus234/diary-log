@@ -2,6 +2,31 @@ pipeline {
     agent any
 
     stages {
+        stage('Run API Unit Tests') {
+            when {
+                anyOf {
+                    changeset 'DiaryLog/**'
+                }
+            }
+
+            steps {
+                dir('DiaryLog/DiaryLogApiTests') {
+                    sh 'sudo rm -rf ./TestResults'
+                    sh 'dotnet add package coverlet.collector'
+                    sh 'dotnet test --collect:\'XPlat Code Coverage\''
+                }
+            }
+
+            post {
+                success {
+                    archiveArtifacts 'DiaryLog/DiaryLogApiTests/TestResults/*/coverage.cobertura.xml'
+                    publishCoverage adapters: [coberturaAdapter(path: 'DiaryLog/DiaryLogApiTests/TestResults/*/coverage.cobertura.xml', thresholds: [
+                            [failUnhealthy: true, thresholdTarget: 'Conditional', unhealthyThreshold: 80.0, unstableThreshold: 50.0]
+                    ])], sourceFileResolver: sourceFiles('NEVER_STORE')
+                }
+            }
+        }
+
         stage('Build API') {
             when {
                 anyOf {
@@ -32,31 +57,6 @@ pipeline {
                 }
 
                 sh 'sudo docker-compose --env-file ./config/test.env  build web'
-            }
-        }
-
-        stage('Run Unit Tests') {
-            when {
-                anyOf {
-                    changeset 'DiaryLog/**'
-                }
-            }
-
-            steps {
-                dir('DiaryLog/DiaryLogApiTests') {
-                    sh 'sudo rm -rf ./TestResults'
-                    sh 'dotnet add package coverlet.collector'
-                    sh 'dotnet test --collect:\'XPlat Code Coverage\''
-                }
-            }
-
-            post {
-                success {
-                    archiveArtifacts 'DiaryLog/DiaryLogApiTests/TestResults/*/coverage.cobertura.xml'
-                    publishCoverage adapters: [coberturaAdapter(path: 'DiaryLog/DiaryLogApiTests/TestResults/*/coverage.cobertura.xml', thresholds: [
-                            [failUnhealthy: true, thresholdTarget: 'Conditional', unhealthyThreshold: 80.0, unstableThreshold: 50.0]
-                    ])], sourceFileResolver: sourceFiles('NEVER_STORE')
-                }
             }
         }
 
