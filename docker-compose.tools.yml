@@ -25,5 +25,3 @@ docker-registry-ui:
     - SSL_VERIFY=false
     - USERNAME=admin
     - PASSWORD=password
-  depends_on:
-    - docker-registry
