@@ -56,7 +56,7 @@ pipeline{
         stage("Registry") {
             steps {
                 sh "docker-compose --env-file ./config/test.env up -d docker-registry"
-                sh "docker-compose push"
+                sh "docker-compose --env-file ./config/test.env push"
             }
         }
         stage("Deploy") {
