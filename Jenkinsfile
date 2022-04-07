@@ -11,29 +11,31 @@ pipeline {
 
             steps {
                 dir('DiaryLog') {
-                    sh 'sudo rm -rf ./dist'
+                    sh 'sudo rm -rf ./bin'
+                    sh 'sudo rm -rf ./obj'
                     sh 'dotnet build --configuration Release'
                     sh 'sudo docker-compose --env-file ../config/test.env build api'
                 }
             }
         }
 
-        stage('Build frontend') {
+        stage('Build Front-end') {
             when {
                 changeset 'diary-log-angular/**'
             }
 
             steps {
                 dir('diary-log-angular') {
-                    sh 'sudo rm -rf ./bin'
-                    sh 'sudo rm -rf ./obj'
+                    sh 'sudo rm -rf ./dist'
+                    sh 'sudo npm install'
                     sh 'sudo ng build'
-                    sh 'sudo docker-compose --env-file ./config/test.env  build web'
                 }
+
+                sh 'sudo docker-compose --env-file ./config/test.env  build web'
             }
         }
 
-        stage('Unit Tests') {
+        stage('Run Unit Tests') {
             steps {
                 dir('DiaryLog/DiaryLogApiTests') {
                     sh 'sudo rm -rf ./TestResults'
@@ -52,7 +54,7 @@ pipeline {
             }
         }
 
-        stage('Clean containers') {
+        stage('Clean Containers') {
             steps {
                 script {
                     try {
@@ -69,9 +71,19 @@ pipeline {
             }
         }
 
-        stage('Registry') {
+        stage('Push Images To Registry') {
             steps {
                 sh 'docker-compose --env-file ./config/test.env push'
+            }
+        }
+
+        stage('Send Discord Notification') {
+            environment {
+                WEBHOOK_URL = credentials('WEBHOOK_URL')
+            }
+
+            steps {
+                discordSend description: 'Build completed', enableArtifactsList: true, footer: '', image: '', link: '', result: 'SUCCESS', scmWebUrl: 'https://github.com/rasmus234/diary-log', showChangeset: true, thumbnail: '', title: 'Diary Log', webhookURL: $WEBHOOK_URL
             }
         }
     }
