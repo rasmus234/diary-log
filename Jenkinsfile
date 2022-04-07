@@ -36,6 +36,12 @@ pipeline {
         }
 
         stage('Run Unit Tests') {
+            when {
+                anyOf {
+                    changeset 'DiaryLog/**'
+                }
+            }
+
             steps {
                 dir('DiaryLog/DiaryLogApiTests') {
                     sh 'sudo rm -rf ./TestResults'
