@@ -28,11 +28,6 @@ pipeline {
         }
 
         stage('Build API') {
-            when {
-                anyOf {
-                    changeset 'DiaryLog/**'
-                }
-            }
 
             steps {
                 dir('DiaryLog') {
@@ -46,9 +41,6 @@ pipeline {
         }
 
         stage('Build Front-end') {
-            when {
-                changeset 'diary-log-angular/**'
-            }
 
             steps {
                 dir('diary-log-angular') {
