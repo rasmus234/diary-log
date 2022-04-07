@@ -28,6 +28,12 @@ pipeline {
         }
 
         stage('Build API') {
+            when {
+                anyOf {
+                    changeset 'DiaryLog/**'
+                }
+            }
+
             steps {
                 dir('DiaryLog') {
                     sh 'sudo rm -rf ./bin'
@@ -39,6 +45,10 @@ pipeline {
         }
 
         stage('Build Front-end') {
+            when {
+                changeset 'diary-log-angular/**'
+            }
+
             steps {
                 dir('diary-log-angular') {
                     sh 'sudo rm -rf ./dist'
