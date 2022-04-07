@@ -1,8 +1,10 @@
 pipeline {
     agent any
+
     parameters {
         run filter: 'SUCCESSFUL', name: 'PROMOTED_BUILD', projectName: 'diary-log'
     }
+
     stages {
         stage("Deploy to production") {
             steps {
