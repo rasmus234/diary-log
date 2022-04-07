@@ -79,7 +79,7 @@ pipeline {
 
         stage('Send Discord Notification') {
             environment {
-                WEBHOOK_URL = credentials('WEBHOOK_URL')
+                WEBHOOK_URL = credentials('DiscordWebhookURL')
             }
 
             steps {
