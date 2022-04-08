@@ -15,7 +15,7 @@ services:
   flyway:
     image: flyway/flyway
     container_name: "flyway"
-    command: -url=jdbc:sqlserver://db -user=su -password=Stigmastigma1 -connectRetries=50 migrate
+    command: -url="jdbc:sqlserver://20.123.8.20:8090;trustServerCertificate=true" -user=su -password=Stigmastigma1 -connectRetries=50 migrate
     volumes:
       - ./db:/flyway/sql
     depends_on:
