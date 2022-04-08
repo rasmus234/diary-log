@@ -84,8 +84,6 @@ pipeline {
             }
         }
 
-        /*
-
         stage('Send Discord Notification') {
             environment {
                 WEBHOOK_URL = credentials('DiscordWebhookURL')
@@ -95,7 +93,5 @@ pipeline {
                 discordSend description: 'Build completed', enableArtifactsList: true, footer: '', image: '', link: '', result: 'SUCCESS', scmWebUrl: 'https://github.com/rasmus234/diary-log', showChangeset: true, thumbnail: '', title: 'Diary Log', webhookURL: WEBHOOK_URL
             }
         }
-
-        */
     }
 }

@@ -17,7 +17,7 @@ services:
     container_name: "${FLYWAY_CONT_NAME}"
     command: -url="jdbc:sqlserver://db;trustServerCertificate=true;" -user=sa -password=Stigmastigma1 -connectRetries=5 migrate
     volumes:
-      - ./db:/flyway/sql
+      - /var/lib/jenkins/workspace/diary-log/db:/flyway/sql
     depends_on:
       - db
 
